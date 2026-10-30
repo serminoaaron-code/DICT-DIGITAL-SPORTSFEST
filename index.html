@@ -59,7 +59,6 @@
       margin-bottom: 16px;
     }
     
-    /* Fixed Container for Sidebar Logo */
     .brand-logo-container {
       width: 42px;
       height: 42px;
@@ -234,11 +233,13 @@
       height: 280px;
       flex-shrink: 0;
     }
+    
     .news-slide {
       position: absolute;
       inset: 0;
-      background-size: cover;
-      background-position: center;
+      background-size: cover;          /* Auto-fits image to container */
+      background-position: center;     /* Centers image focus */
+      background-repeat: no-repeat;    /* Prevents duplicate tiling */
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -248,6 +249,7 @@
       pointer-events: none;
     }
     .news-slide.active { opacity: 1; pointer-events: auto; }
+    
     .news-overlay {
       position: absolute;
       inset: 0;
@@ -398,7 +400,7 @@
 
   <!-- Main View -->
   <main>
-    <!-- Auto-Fitting Banner Header -->
+    <!-- Header Banner -->
     <header class="banner-header">
       <img src="banner.png" alt="DICT Banner" class="banner-img-bg" onerror="this.style.display='none'">
       
@@ -436,7 +438,7 @@
         </div>
       </section>
 
-      <!-- 4 Sport Leaderboard Grid -->
+      <!-- Leaderboards -->
       <h2 style="margin: 18px 0 10px 0; font-size: 1.3rem;">Current Sport Standings</h2>
       <div class="grid-2">
         <div class="card">
@@ -494,7 +496,7 @@
       </div>
     </div>
 
-    <!-- TAB 5: SCORE MANAGEMENT (Admin Protected) -->
+    <!-- TAB 5: SCORE MANAGEMENT -->
     <div id="view-manage" class="tab-view hidden">
       <div id="adminProtectedArea" class="hidden">
         <div class="card">
@@ -563,8 +565,8 @@
         <input type="text" id="newsCategory" placeholder="Category (e.g. Result, Update)" required>
         <textarea id="newsBody" rows="3" placeholder="Announcement content..." required></textarea>
         
-        <label style="font-size: 0.82rem; color: var(--text-muted);">Image Filename or URL:</label>
-        <input type="text" id="newsImageUrl" placeholder="news1.png or https://..." required>
+        <label style="font-size: 0.82rem; color: var(--text-muted);">Image Filename or Direct URL:</label>
+        <input type="text" id="newsImageUrl" placeholder="news2.png or https://..." required>
         
         <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
           <button type="button" class="secondary" onclick="closeNewsModal()">Cancel</button>
@@ -591,22 +593,22 @@
     let teamsData = {};
     let isAdmin = false;
 
-    // GITHUB IMAGE HOSTING CONFIGURATION
+    // GITHUB SETTINGS
     const GITHUB_USER = "serminoaaron-code";
     const GITHUB_REPO = "DICT-Digital-Sportsfest-2026";
-    const GITHUB_BRANCH = "main"; // Change to "master" if your primary branch is master
+    const GITHUB_BRANCH = "main";
 
     function resolveImageUrl(input) {
       if (!input) return "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80";
       
-      // If full URL is entered (Unsplash, Google Drive, External), return as is
+      // Return directly if it's already a full link
       if (input.startsWith('http://') || input.startsWith('https://')) {
         return input;
       }
 
-      // Convert local filename (e.g., "news1.png") into raw GitHub URL
+      // Converts "news2.png" to root repository path on GitHub
       const filename = input.trim().replace(/^\/+/, '');
-      return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/images/${filename}`;
+      return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${filename}`;
     }
 
     // REALTIME DATABASE LISTENERS
@@ -757,7 +759,7 @@
       `).join('');
     }
 
-    // DATABASE WRITE ACTIONS (Admin Only)
+    // DATABASE WRITE ACTIONS
     document.getElementById('addTeamForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!isAdmin) return;
