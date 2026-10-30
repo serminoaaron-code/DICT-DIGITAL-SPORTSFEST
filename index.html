@@ -59,7 +59,6 @@
       margin-bottom: 16px;
     }
     
-    /* Fixed Container for Sidebar Logo */
     .brand-logo-container {
       width: 42px;
       height: 42px;
@@ -123,10 +122,9 @@
       gap: 20px;
     }
 
-    /* PERFECT FIT BANNER HEADER */
     .banner-header {
       width: 100%;
-      height: 160px; /* Fixed proportional height */
+      height: 160px;
       background: linear-gradient(135deg, var(--dict-blue-dark) 0%, var(--dict-blue) 100%);
       border-radius: 14px;
       border: 2px solid var(--border);
@@ -140,13 +138,12 @@
       flex-shrink: 0;
     }
     
-    /* Fits ANY uploaded image smoothly across the full banner area */
     .banner-img-bg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Covers full width/height without stretching */
+      object-fit: cover;
       object-position: center;
       z-index: 1;
     }
@@ -167,7 +164,6 @@
       gap: 18px;
     }
 
-    /* Fixed Container for Header Logo */
     .banner-logo-container {
       width: 75px;
       height: 75px;
@@ -400,9 +396,7 @@
 
   <!-- Main View -->
   <main>
-    <!-- Auto-Fitting Banner Header -->
     <header class="banner-header">
-      <!-- Auto-fits banner.png to 100% width/height without stretching -->
       <img src="banner.png" alt="DICT Banner" class="banner-img-bg" onerror="this.style.display='none'">
       
       <div class="banner-fallback-content">
@@ -427,7 +421,6 @@
 
     <!-- TAB 1: DASHBOARD OVERVIEW -->
     <div id="view-dashboard" class="tab-view">
-      <!-- News Carousel -->
       <section class="news-section" id="newsCarousel">
         <div class="news-slide active" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80');">
           <div class="news-overlay"></div>
@@ -439,7 +432,6 @@
         </div>
       </section>
 
-      <!-- 4 Sport Leaderboard Grid -->
       <h2 style="margin: 18px 0 10px 0; font-size: 1.3rem;">Current Sport Standings</h2>
       <div class="grid-2">
         <div class="card">
@@ -497,9 +489,8 @@
       </div>
     </div>
 
-    <!-- TAB 5: SCORE MANAGEMENT (Admin Protected) -->
+    <!-- TAB 5: SCORE MANAGEMENT -->
     <div id="view-manage" class="tab-view hidden">
-      <!-- Admin Protected View -->
       <div id="adminProtectedArea" class="hidden">
         <div class="card">
           <div class="card-header"><h2>Register New Team</h2></div>
@@ -533,7 +524,6 @@
         </div>
       </div>
 
-      <!-- Non-Admin Locked Prompt -->
       <div id="adminLockedPrompt" class="card" style="text-align: center; padding: 40px;">
         <h2 style="color: var(--dict-yellow); margin-bottom: 10px;">🔒 Admin Access Required</h2>
         <p style="color: var(--text-muted); max-width: 450px; margin: 0 auto 20px auto;">
@@ -568,19 +558,11 @@
         <input type="text" id="newsCategory" placeholder="Category (e.g. Result, Update)" required>
         <textarea id="newsBody" rows="3" placeholder="Announcement content..." required></textarea>
         <label style="font-size: 0.82rem; color: var(--text-muted);">Cover Photo (Upload file OR Image URL):</label>
-       <input type="file" id="newsImageFile"
-       accept="image/jpeg,image/png,image/webp">
-
-<input type="url" id="newsImageUrl"
-       placeholder="https://...">
-
-<input type="password" id="driveUploadKey"
-       placeholder="Drive upload key"
-       autocomplete="off">
-
-<small>Enter the upload key configured in Google Apps Script.</small>
-
-<div id="newsUploadStatus"></div>
+        <input type="file" id="newsImageFile" accept="image/jpeg,image/png,image/webp">
+        <input type="url" id="newsImageUrl" placeholder="https://...">
+        <input type="password" id="driveUploadKey" placeholder="Drive upload key" autocomplete="off">
+        <small style="color: var(--text-muted);">Enter the upload key configured in Google Apps Script.</small>
+        <div id="newsUploadStatus" style="font-size:0.85rem; color:var(--dict-yellow);"></div>
         <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
           <button type="button" class="secondary" onclick="closeNewsModal()">Cancel</button>
           <button type="submit" class="yellow">Publish Post</button>
@@ -589,9 +571,12 @@
     </div>
   </div>
 
+  <iframe id="driveUploadFrame" name="driveUploadFrame" style="display:none"></iframe>
+
   <script>
-    // FIREBASE INITIALIZATION
+    // CONFIGURATION & FIREBASE INITIALIZATION
     const DRIVE_UPLOAD_ENDPOINT = "https://script.google.com/macros/s/AKfycbyYjGF9h3jcTsZOl3hFGRfCTJFUsQ06TBewJw1kGu-rBu15Ve8RJ9TbFxuqMgbmkFVdxA/exec";
+    
     const firebaseConfig = {
       apiKey: "AIzaSyDm4nEt0WI8t-qh-sYKJssBwFibeRBpLss",
       authDomain: "dict-digital-sportsfest.firebaseapp.com",
@@ -755,7 +740,7 @@
       `).join('');
     }
 
-    // DATABASE WRITE ACTIONS (Admin Only)
+    // DATABASE WRITE ACTIONS
     document.getElementById('addTeamForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!isAdmin) return;
@@ -793,180 +778,151 @@
       }
     }
 
-    // NEWS POSTING
-    // GOOGLE DRIVE UPLOAD SETTINGS
-const DRIVE_UPLOAD_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+    // DRIVE UPLOAD & NEWS POSTING
+    function uploadNewsImageToDrive(file, uploadKey) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
-function uploadNewsImageToDrive(file, uploadKey) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+        reader.onerror = () => reject(new Error("Cannot read image."));
 
-    reader.onerror = () => reject(new Error("Cannot read image."));
+        reader.onload = () => {
+          const base64 = reader.result.split(",")[1];
+          const requestId = "upload_" + Date.now();
 
-    reader.onload = () => {
-      const base64 = reader.result.split(",")[1];
-      const requestId = "upload_" + Date.now();
+          const iframe = document.getElementById("driveUploadFrame");
+          const form = document.createElement("form");
 
-      const iframe = document.getElementById("driveUploadFrame");
-      const form = document.createElement("form");
+          form.method = "POST";
+          form.action = DRIVE_UPLOAD_ENDPOINT;
+          form.enctype = "application/x-www-form-urlencoded";
+          form.target = "driveUploadFrame";
+          form.style.display = "none";
 
-      form.method = "POST";
-      form.action = DRIVE_UPLOAD_ENDPOINT;
-      form.enctype = "application/x-www-form-urlencoded";
-      form.target = "driveUploadFrame";
-      form.style.display = "none";
+          const fields = {
+            action: "uploadNewsImage",
+            requestId,
+            uploadKey,
+            fileName: file.name,
+            mimeType: file.type,
+            base64
+          };
 
-      const fields = {
-        action: "uploadNewsImage",
-        requestId,
-        uploadKey,
-        fileName: file.name,
-        mimeType: file.type,
-        base64
-      };
+          Object.entries(fields).forEach(([name, value]) => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+          });
 
-      Object.entries(fields).forEach(([name, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = value;
-        form.appendChild(input);
+          const timeout = setTimeout(() => {
+            window.removeEventListener("message", listener);
+            form.remove();
+            reject(new Error("Upload timed out."));
+          }, 120000);
+
+          function listener(event) {
+            if (event.source !== iframe.contentWindow) return;
+
+            const data = event.data;
+
+            if (
+              !data ||
+              data.type !== "DRIVE_UPLOAD_RESULT" ||
+              data.requestId !== requestId
+            ) return;
+
+            clearTimeout(timeout);
+            window.removeEventListener("message", listener);
+            form.remove();
+
+            if (data.ok) {
+              resolve(data.imageUrl);
+            } else {
+              reject(new Error(data.error));
+            }
+          }
+
+          window.addEventListener("message", listener);
+          document.body.appendChild(form);
+          form.submit();
+        };
+
+        reader.readAsDataURL(file);
       });
-
-      const timeout = setTimeout(() => {
-        window.removeEventListener("message", listener);
-        form.remove();
-        reject(new Error("Upload timed out."));
-      }, 120000);
-
-      function listener(event) {
-        if (event.source !== iframe.contentWindow) return;
-
-        const data = event.data;
-
-        if (
-          !data ||
-          data.type !== "DRIVE_UPLOAD_RESULT" ||
-          data.requestId !== requestId
-        ) return;
-
-        clearTimeout(timeout);
-        window.removeEventListener("message", listener);
-        form.remove();
-
-        if (data.ok) {
-          resolve(data.imageUrl);
-        } else {
-          reject(new Error(data.error));
-        }
-      }
-
-      window.addEventListener("message", listener);
-      document.body.appendChild(form);
-      form.submit();
-    };
-
-    reader.readAsDataURL(file);
-  });
-}
-
-// NEWS POSTING
-document.getElementById("newsForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  if (!isAdmin) return;
-
-  const form = e.currentTarget;
-  const button = form.querySelector('button[type="submit"]');
-
-  const title = document.getElementById("newsTitle").value.trim();
-  const category = document.getElementById("newsCategory").value.trim();
-  const body = document.getElementById("newsBody").value.trim();
-
-  const fileInput = document.getElementById("newsImageFile");
-  const urlInput = document.getElementById("newsImageUrl").value.trim();
-  const uploadKey = document.getElementById("driveUploadKey").value.trim();
-
-  let imageUrl = urlInput ||
-    "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80";
-
-  button.disabled = true;
-  button.textContent = "Publishing...";
-
-  try {
-    if (fileInput.files.length && urlInput) {
-      throw new Error("Choose either an image file or an image URL.");
     }
 
-    if (fileInput.files.length) {
-      const file = fileInput.files[0];
-
-      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-        throw new Error("Only JPG, PNG, and WEBP are accepted.");
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error("Image must not exceed 5 MB.");
-      }
-
-      if (!uploadKey) {
-        throw new Error("Enter your Drive upload key.");
-      }
-
-      document.getElementById("newsUploadStatus").textContent =
-        "Uploading image to Google Drive...";
-
-      imageUrl = await uploadNewsImageToDrive(file, uploadKey);
-    }
-
-    await db.ref("news").push({
-      title,
-      category,
-      body,
-      image: imageUrl,
-      timestamp: Date.now()
-    });
-
-    alert("News published successfully!");
-
-    form.reset();
-    document.getElementById("newsUploadStatus").textContent = "";
-    closeNewsModal();
-
-  } catch (error) {
-    console.error(error);
-    document.getElementById("newsUploadStatus").textContent = error.message;
-    alert("Publishing failed:\n" + error.message);
-
-  } finally {
-    button.disabled = false;
-    button.textContent = "Publish Post";
-  }
-}); {
+    document.getElementById("newsForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
       if (!isAdmin) return;
 
-      const title = document.getElementById('newsTitle').value;
-      const category = document.getElementById('newsCategory').value;
-      const body = document.getElementById('newsBody').value;
-      const fileInput = document.getElementById('newsImageFile');
-      const urlInput = document.getElementById('newsImageUrl').value;
+      const form = e.currentTarget;
+      const button = form.querySelector('button[type="submit"]');
 
-      let imageUrl = urlInput || "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80";
+      const title = document.getElementById("newsTitle").value.trim();
+      const category = document.getElementById("newsCategory").value.trim();
+      const body = document.getElementById("newsBody").value.trim();
 
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const storageRef = storage.ref(`news/${Date.now()}_${file.name}`);
-        const snapshot = await storageRef.put(file);
-        imageUrl = await snapshot.ref.getDownloadURL();
-      }
+      const fileInput = document.getElementById("newsImageFile");
+      const urlInput = document.getElementById("newsImageUrl").value.trim();
+      const uploadKey = document.getElementById("driveUploadKey").value.trim();
 
-      db.ref('news').push({
-        title, category, body, image: imageUrl, timestamp: Date.now()
-      }, () => {
+      let imageUrl = urlInput ||
+        "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80";
+
+      button.disabled = true;
+      button.textContent = "Publishing...";
+
+      try {
+        if (fileInput.files.length && urlInput) {
+          throw new Error("Choose either an image file or an image URL.");
+        }
+
+        if (fileInput.files.length) {
+          const file = fileInput.files[0];
+
+          if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            throw new Error("Only JPG, PNG, and WEBP are accepted.");
+          }
+
+          if (file.size > 5 * 1024 * 1024) {
+            throw new Error("Image must not exceed 5 MB.");
+          }
+
+          if (!uploadKey) {
+            throw new Error("Enter your Drive upload key.");
+          }
+
+          document.getElementById("newsUploadStatus").textContent =
+            "Uploading image to Google Drive...";
+
+          imageUrl = await uploadNewsImageToDrive(file, uploadKey);
+        }
+
+        await db.ref("news").push({
+          title,
+          category,
+          body,
+          image: imageUrl,
+          timestamp: Date.now()
+        });
+
+        alert("News published successfully!");
+
+        form.reset();
+        document.getElementById("newsUploadStatus").textContent = "";
         closeNewsModal();
-        document.getElementById('newsForm').reset();
-      });
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById("newsUploadStatus").textContent = error.message;
+        alert("Publishing failed:\n" + error.message);
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Publish Post";
+      }
     });
 
     // MODAL CONTROL
@@ -975,11 +931,5 @@ document.getElementById("newsForm").addEventListener("submit", async (e) => {
     function openNewsModal() { document.getElementById('newsModal').classList.add('show'); }
     function closeNewsModal() { document.getElementById('newsModal').classList.remove('show'); }
   </script>
-  
-  <iframe
-  id="driveUploadFrame"
-  name="driveUploadFrame"
-  style="display:none">
-</iframe>
 </body>
 </html>
