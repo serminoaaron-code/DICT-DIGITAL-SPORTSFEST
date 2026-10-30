@@ -74,9 +74,10 @@
       overflow: hidden;
     }
     .brand-logo-img {
+      display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Always fits without distortion */
+      object-fit: contain;
     }
 
     .brand-title { font-weight: 800; font-size: 1.05rem; line-height: 1.2; letter-spacing: 0.5px; }
@@ -183,9 +184,10 @@
     }
 
     .banner-logo {
+      display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain; /* Scales any uploaded logo without stretching */
+      object-fit: contain;
     }
 
     .banner-text-title {
@@ -359,6 +361,18 @@
       padding: 24px;
     }
 
+    @media (max-width: 700px) {
+      aside { width: 210px; padding: 12px; }
+      main { padding: 14px; }
+      .banner-header { height: auto; min-height: 130px; padding: 16px; }
+      .banner-fallback-content { gap: 10px; }
+      .banner-left-group { gap: 10px; }
+      .banner-logo-container { width: 56px; height: 56px; }
+      .banner-text-title { font-size: clamp(1rem, 4vw, 1.4rem); }
+      .banner-text-subtitle { font-size: 0.85rem; }
+      .admin-status-badge { padding: 6px; gap: 6px; }
+    }
+
     .hidden { display: none !important; }
   </style>
 </head>
@@ -368,7 +382,7 @@
   <aside>
     <div class="brand">
       <div class="brand-logo-container">
-        <img src="Logo.png" alt="DICT Logo" class="brand-logo-img" onerror="this.parentElement.style.display='none'">
+        <img src="logo.png" alt="DICT Logo" class="brand-logo-img" onerror="this.parentElement.style.display='none'">
       </div>
       <div class="brand-title">DICT Sportsfest <span>Digital 2026</span></div>
     </div>
@@ -395,7 +409,7 @@
       <div class="banner-fallback-content">
         <div class="banner-left-group">
           <div class="banner-logo-container">
-            <img src="Logo.png" alt="DICT" class="banner-logo" onerror="this.parentElement.style.display='none'">
+            <img src="logo.png" alt="DICT" class="banner-logo" onerror="this.parentElement.style.display='none'">
           </div>
           <div>
             <h1 class="banner-text-title">DICT DIGITAL SPORTSFEST 2026</h1>
