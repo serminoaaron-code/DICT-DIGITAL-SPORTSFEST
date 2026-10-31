@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DICT Digital Sportsfest 2026</title>
   
-  <!-- Firebase SDKs (Compat Version) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -39,7 +39,6 @@
       overflow: hidden;
     }
 
-    /* Sidebar Navigation */
     aside {
       width: 260px;
       background: #040812;
@@ -71,13 +70,7 @@
       justify-content: center;
       overflow: hidden;
     }
-    .brand-logo-img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
+    .brand-logo-img { display: block; width: 100%; height: 100%; object-fit: contain; }
     .brand-title { font-weight: 800; font-size: 1.05rem; line-height: 1.2; letter-spacing: 0.5px; }
     .brand-title span { color: var(--dict-yellow); font-size: 0.78rem; display: block; font-weight: 600; }
 
@@ -94,14 +87,8 @@
       gap: 10px;
       transition: all 0.2s;
     }
-    nav a:hover, nav a.active {
-      color: var(--text-white);
-      background: var(--bg-card);
-    }
-    nav a.active { 
-      background: var(--dict-blue);
-      border-left: 4px solid var(--dict-yellow); 
-    }
+    nav a:hover, nav a.active { color: var(--text-white); background: var(--bg-card); }
+    nav a.active { background: var(--dict-blue); border-left: 4px solid var(--dict-yellow); }
 
     .nav-header {
       font-size: 0.75rem;
@@ -112,7 +99,6 @@
       font-weight: 700;
     }
 
-    /* Main Content Area */
     main {
       flex: 1;
       overflow-y: auto;
@@ -122,7 +108,6 @@
       gap: 20px;
     }
 
-    /* PERFECT FIT BANNER HEADER */
     .banner-header {
       width: 100%;
       height: 160px;
@@ -159,11 +144,7 @@
       justify-content: space-between;
     }
 
-    .banner-left-group {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
+    .banner-left-group { display: flex; align-items: center; gap: 18px; }
 
     .banner-logo-container {
       width: 75px;
@@ -179,12 +160,7 @@
       overflow: hidden;
     }
 
-    .banner-logo {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .banner-logo { display: block; width: 100%; height: 100%; object-fit: contain; }
 
     .banner-text-title {
       font-size: 1.75rem;
@@ -223,7 +199,7 @@
       backdrop-filter: blur(4px);
     }
 
-    /* News Carousel Section */
+    /* INTERACTIVE NEWS CAROUSEL */
     .news-section {
       position: relative;
       background: var(--bg-card);
@@ -232,30 +208,33 @@
       border: 1px solid var(--border);
       height: 280px;
       flex-shrink: 0;
+      cursor: pointer;
     }
     
     .news-slide {
       position: absolute;
       inset: 0;
-      background-size: cover;          /* Auto-fits image to container */
-      background-position: center;     /* Centers image focus */
-      background-repeat: no-repeat;    /* Prevents duplicate tiling */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 28px;
-      transition: opacity 0.5s ease-in-out;
+      transition: opacity 0.6s ease-in-out, transform 0.4s ease;
       opacity: 0;
       pointer-events: none;
     }
     .news-slide.active { opacity: 1; pointer-events: auto; }
+    .news-section:hover .news-slide.active { transform: scale(1.015); }
     
     .news-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(0deg, rgba(7,13,25,0.95) 0%, rgba(7,13,25,0.3) 60%, transparent 100%);
+      background: linear-gradient(0deg, rgba(7,13,25,0.95) 0%, rgba(7,13,25,0.4) 60%, transparent 100%);
     }
-    .news-content { position: relative; z-index: 2; max-width: 650px; }
+
+    .news-content { position: relative; z-index: 2; max-width: 700px; }
     .news-tag {
       background: var(--dict-red);
       color: white;
@@ -270,7 +249,60 @@
     .news-title { font-size: 1.6rem; font-weight: 800; margin: 0 0 6px 0; line-height: 1.2; }
     .news-desc { color: var(--text-muted); font-size: 0.95rem; margin: 0; line-height: 1.4; }
 
-    /* Layout Grids & Cards */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: 1px solid var(--border);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+    }
+    .carousel-btn:hover { background: var(--dict-blue); }
+    .carousel-btn.prev { left: 14px; }
+    .carousel-btn.next { right: 14px; }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 12px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active { background: var(--dict-yellow); transform: scale(1.2); }
+
+    .delete-news-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 12;
+      background: var(--dict-red);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 18px; }
     .card {
       background: var(--bg-card);
@@ -288,7 +320,6 @@
     }
     .card-header h2 { margin: 0; font-size: 1.15rem; color: var(--dict-white); }
 
-    /* Tables */
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
     th { text-align: left; padding: 10px; color: var(--text-muted); border-bottom: 1px solid var(--border); font-size: 0.78rem; text-transform: uppercase; }
     td { padding: 10px; border-bottom: 1px solid var(--border); }
@@ -297,7 +328,6 @@
     tr.rank-2 td:first-child { color: var(--rank-2); font-weight: 800; }
     tr.rank-3 td:first-child { color: var(--rank-3); font-weight: 800; }
 
-    /* UI Inputs & Buttons */
     input, select, textarea {
       background: #080e1a;
       border: 1px solid var(--border);
@@ -327,7 +357,6 @@
     button.yellow:hover { filter: brightness(1.1); }
     button.danger { background: var(--dict-red); }
 
-    /* Arena Frames */
     .game-frame-container {
       width: 100%;
       height: 720px;
@@ -337,7 +366,6 @@
     }
     iframe { width: 100%; height: 100%; border: none; }
 
-    /* Modal Overlay */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -355,7 +383,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       border-radius: 12px;
       padding: 24px;
     }
@@ -377,7 +405,6 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
   <aside>
     <div class="brand">
       <div class="brand-logo-container">
@@ -387,23 +414,18 @@
     </div>
     <nav>
       <a href="#dashboard" class="active" onclick="switchTab('dashboard')">📊 Dashboard Overview</a>
-      
       <div class="nav-header">Playable Arenas</div>
       <a href="#chess" onclick="switchTab('chess')">♟️ Chess Arena</a>
       <a href="#dama" onclick="switchTab('dama')">🔴 Dama Arena</a>
       <a href="#scrabble" onclick="switchTab('scrabble')">🔤 Scrabble Arena</a>
-
       <div class="nav-header">Administration</div>
       <a href="#manage" onclick="switchTab('manage')">⚙️ Score Management</a>
     </nav>
   </aside>
 
-  <!-- Main View -->
   <main>
-    <!-- Header Banner -->
     <header class="banner-header">
       <img src="banner.png" alt="DICT Banner" class="banner-img-bg" onerror="this.style.display='none'">
-      
       <div class="banner-fallback-content">
         <div class="banner-left-group">
           <div class="banner-logo-container">
@@ -426,19 +448,10 @@
 
     <!-- TAB 1: DASHBOARD OVERVIEW -->
     <div id="view-dashboard" class="tab-view">
-      <!-- News Carousel -->
       <section class="news-section" id="newsCarousel">
-        <div class="news-slide active" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80');">
-          <div class="news-overlay"></div>
-          <div class="news-content">
-            <span class="news-tag">Featured News</span>
-            <h2 class="news-title">DICT Digital Sportsfest 2026 Underway!</h2>
-            <p class="news-desc">Follow live scoring records for Mobile Legends, Chess, Dama, and Scrabble championships.</p>
-          </div>
-        </div>
+        <!-- Rendered Dynamically -->
       </section>
 
-      <!-- Leaderboards -->
       <h2 style="margin: 18px 0 10px 0; font-size: 1.3rem;">Current Sport Standings</h2>
       <div class="grid-2">
         <div class="card">
@@ -475,21 +488,19 @@
       </div>
     </div>
 
-    <!-- TAB 2: CHESS ARENA -->
+    <!-- ARENA TABS -->
     <div id="view-chess" class="tab-view hidden">
       <div class="game-frame-container">
         <iframe src="https://serminoaaron-code.github.io/DICT-Chess-Arena/" title="DICT Chess Arena"></iframe>
       </div>
     </div>
 
-    <!-- TAB 3: DAMA ARENA -->
     <div id="view-dama" class="tab-view hidden">
       <div class="game-frame-container">
         <iframe src="https://serminoaaron-code.github.io/DICT-DAMA/" id="damaFrame" title="DICT Dama Arena"></iframe>
       </div>
     </div>
 
-    <!-- TAB 4: SCRABBLE ARENA -->
     <div id="view-scrabble" class="tab-view hidden">
       <div class="game-frame-container">
         <iframe src="https://serminoaaron-code.github.io/DICT-SCRABBLE/" id="scrabbleFrame" title="DICT Scrabble Arena"></iframe>
@@ -556,7 +567,7 @@
     </div>
   </div>
 
-  <!-- News Modal -->
+  <!-- News Post Modal (GitHub URL Input Mode) -->
   <div class="modal-overlay" id="newsModal">
     <div class="modal">
       <h2 style="margin-top:0;">Post Announcement</h2>
@@ -576,8 +587,22 @@
     </div>
   </div>
 
+  <!-- Full News Detail Modal -->
+  <div class="modal-overlay" id="detailNewsModal">
+    <div class="modal">
+      <span id="detailTag" class="news-tag"></span>
+      <h2 id="detailTitle" style="margin: 6px 0 12px 0;"></h2>
+      <div style="width:100%; max-height:240px; overflow:hidden; border-radius:8px; margin-bottom:12px;">
+        <img id="detailImg" src="" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+      <p id="detailBody" style="color:var(--text-muted); line-height:1.5; white-space:pre-wrap;"></p>
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+        <button type="button" class="yellow" onclick="closeDetailNewsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // FIREBASE INITIALIZATION
     const firebaseConfig = {
       apiKey: "AIzaSyDm4nEt0WI8t-qh-sYKJssBwFibeRBpLss",
       authDomain: "dict-digital-sportsfest.firebaseapp.com",
@@ -591,27 +616,23 @@
     const db = firebase.database();
 
     let teamsData = {};
+    let newsData = {};
+    let newsList = [];
+    let currentSlideIndex = 0;
+    let carouselTimer = null;
     let isAdmin = false;
 
-    // GITHUB SETTINGS
     const GITHUB_USER = "serminoaaron-code";
     const GITHUB_REPO = "DICT-Digital-Sportsfest-2026";
     const GITHUB_BRANCH = "main";
 
     function resolveImageUrl(input) {
       if (!input) return "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80";
-      
-      // Return directly if it's already a full link
-      if (input.startsWith('http://') || input.startsWith('https://')) {
-        return input;
-      }
-
-      // Converts "news2.png" to root repository path on GitHub
+      if (input.startsWith('http://') || input.startsWith('https://')) return input;
       const filename = input.trim().replace(/^\/+/, '');
       return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${filename}`;
     }
 
-    // REALTIME DATABASE LISTENERS
     db.ref('teams').on('value', (snapshot) => {
       teamsData = snapshot.val() || {};
       renderLeaderboards();
@@ -619,13 +640,109 @@
     });
 
     db.ref('news').on('value', (snapshot) => {
-      const newsObj = snapshot.val();
-      if (newsObj) {
-        renderNewsCarousel(Object.values(newsObj).reverse());
-      }
+      newsData = snapshot.val() || {};
+      newsList = Object.entries(newsData).map(([id, val]) => ({ id, ...val })).reverse();
+      renderNewsCarousel();
     });
 
-    // ADMIN AUTHENTICATION
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
+
+      const targetView = document.getElementById(`view-${tabId}`);
+      if (targetView) targetView.classList.remove('hidden');
+
+      const activeNav = document.querySelector(`nav a[href="#${tabId}"]`);
+      if (activeNav) activeNav.classList.add('active');
+    }
+
+    /* CAROUSEL LOGIC */
+    function renderNewsCarousel() {
+      const carousel = document.getElementById('newsCarousel');
+      clearInterval(carouselTimer);
+
+      if (newsList.length === 0) {
+        carousel.innerHTML = `
+          <div class="news-slide active" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80');">
+            <div class="news-overlay"></div>
+            <div class="news-content">
+              <span class="news-tag">Featured News</span>
+              <h2 class="news-title">DICT Digital Sportsfest 2026 Underway!</h2>
+              <p class="news-desc">Follow live scoring records for MLBB, Chess, Dama, and Scrabble.</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      currentSlideIndex = 0;
+
+      let slidesHTML = newsList.map((item, idx) => `
+        <div class="news-slide ${idx === 0 ? 'active' : ''}" 
+             style="background-image: url('${item.image}');" 
+             onclick="openDetailNewsModal(${idx})">
+          ${isAdmin ? `<button class="delete-news-btn" onclick="event.stopPropagation(); deleteNews('${item.id}')">Delete Post</button>` : ''}
+          <div class="news-overlay"></div>
+          <div class="news-content">
+            <span class="news-tag">${item.category}</span>
+            <h2 class="news-title">${item.title}</h2>
+            <p class="news-desc">${item.body}</p>
+          </div>
+        </div>
+      `).join('');
+
+      slidesHTML += `
+        <button class="carousel-btn prev" onclick="event.stopPropagation(); changeSlide(-1)">&#10094;</button>
+        <button class="carousel-btn next" onclick="event.stopPropagation(); changeSlide(1)">&#10095;</button>
+        <div class="carousel-dots">
+          ${newsList.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation(); goToSlide(${i})"></div>`).join('')}
+        </div>
+      `;
+
+      carousel.innerHTML = slidesHTML;
+
+      carouselTimer = setInterval(() => changeSlide(1), 5000);
+
+      carousel.onmouseenter = () => clearInterval(carouselTimer);
+      carousel.onmouseleave = () => {
+        clearInterval(carouselTimer);
+        carouselTimer = setInterval(() => changeSlide(1), 5000);
+      };
+    }
+
+    function updateSlideVisibility() {
+      const slides = document.querySelectorAll('.news-slide');
+      const dots = document.querySelectorAll('.dot');
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentSlideIndex);
+      });
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentSlideIndex);
+      });
+    }
+
+    function changeSlide(direction) {
+      if (!newsList.length) return;
+      currentSlideIndex = (currentSlideIndex + direction + newsList.length) % newsList.length;
+      updateSlideVisibility();
+    }
+
+    function goToSlide(index) {
+      currentSlideIndex = index;
+      updateSlideVisibility();
+    }
+
+    function openDetailNewsModal(index) {
+      const news = newsList[index];
+      if (!news) return;
+      document.getElementById('detailTag').innerText = news.category;
+      document.getElementById('detailTitle').innerText = news.title;
+      document.getElementById('detailImg').src = news.image;
+      document.getElementById('detailBody').innerText = news.body;
+      document.getElementById('detailNewsModal').classList.add('show');
+    }
+    function closeDetailNewsModal() { document.getElementById('detailNewsModal').classList.remove('show'); }
+
+    /* AUTH & MANAGEMENT */
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const u = document.getElementById('adminUser').value;
@@ -673,26 +790,12 @@
         lockedPrompt.classList.remove('hidden');
         protectedArea.classList.add('hidden');
       }
+      renderNewsCarousel();
     }
 
-    // NAVIGATION
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
-
-      const targetView = document.getElementById(`view-${tabId}`);
-      if (targetView) targetView.classList.remove('hidden');
-
-      const activeNav = document.querySelector(`nav a[href="#${tabId}"]`);
-      if (activeNav) activeNav.classList.add('active');
-    }
-
-    // RANKINGS & TABLES
     function computeRankings(sportKey) {
       const list = [];
-      Object.keys(teamsData).forEach(id => {
-        list.push({ id, ...teamsData[id] });
-      });
+      Object.keys(teamsData).forEach(id => list.push({ id, ...teamsData[id] }));
       list.sort((a, b) => (b[sportKey] || 0) - (a[sportKey] || 0));
       return list;
     }
@@ -701,12 +804,10 @@
       ['mlbb', 'chess', 'dama', 'scrabble'].forEach(sport => {
         const tbody = document.getElementById(`top-${sport}`);
         const ranked = computeRankings(sport).slice(0, 5);
-
         if (!ranked.length) {
           tbody.innerHTML = `<tr><td colspan="3">No teams registered yet.</td></tr>`;
           return;
         }
-
         tbody.innerHTML = ranked.map((t, idx) => `
           <tr class="${idx < 3 ? 'rank-' + (idx + 1) : ''}">
             <td>${idx + 1}</td>
@@ -745,32 +846,13 @@
       }).join('');
     }
 
-    function renderNewsCarousel(newsItems) {
-      const carousel = document.getElementById('newsCarousel');
-      carousel.innerHTML = newsItems.map((item, idx) => `
-        <div class="news-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${item.image}');">
-          <div class="news-overlay"></div>
-          <div class="news-content">
-            <span class="news-tag">${item.category}</span>
-            <h2 class="news-title">${item.title}</h2>
-            <p class="news-desc">${item.body}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // DATABASE WRITE ACTIONS
     document.getElementById('addTeamForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!isAdmin) return;
-
       const name = document.getElementById('newTeamName').value.trim();
       const agency = document.getElementById('newTeamAgency').value.trim();
-
       if (name && agency) {
-        db.ref('teams').push({
-          name, agency, mlbb: 0, chess: 0, dama: 0, scrabble: 0
-        });
+        db.ref('teams').push({ name, agency, mlbb: 0, chess: 0, dama: 0, scrabble: 0 });
         document.getElementById('newTeamName').value = '';
         document.getElementById('newTeamAgency').value = '';
       }
@@ -785,19 +867,19 @@
       const dama = parseInt(document.getElementById(`dama-${id}`).value) || 0;
       const scrabble = parseInt(document.getElementById(`scrabble-${id}`).value) || 0;
 
-      db.ref(`teams/${id}`).update({ name, agency, mlbb, chess, dama, scrabble }, () => {
-        alert('Team records saved!');
-      });
+      db.ref(`teams/${id}`).update({ name, agency, mlbb, chess, dama, scrabble }, () => alert('Team updated!'));
     }
 
     function deleteTeam(id) {
       if (!isAdmin) return;
-      if (confirm('Delete this team entry?')) {
-        db.ref(`teams/${id}`).remove();
-      }
+      if (confirm('Delete team?')) db.ref(`teams/${id}`).remove();
     }
 
-    // NEWS POSTING HANDLER
+    function deleteNews(id) {
+      if (!isAdmin) return;
+      if (confirm('Delete news post?')) db.ref(`news/${id}`).remove();
+    }
+
     document.getElementById('newsForm').addEventListener('submit', (e) => {
       e.preventDefault();
       if (!isAdmin) return;
@@ -806,23 +888,19 @@
       const category = document.getElementById('newsCategory').value;
       const body = document.getElementById('newsBody').value;
       const imageInput = document.getElementById('newsImageUrl').value;
-
       const imageUrl = resolveImageUrl(imageInput);
 
-      db.ref('news').push({
-        title, category, body, image: imageUrl, timestamp: Date.now()
-      }, () => {
+      db.ref('news').push({ title, category, body, image: imageUrl, timestamp: Date.now() }, () => {
         closeNewsModal();
         document.getElementById('newsForm').reset();
-        alert('Announcement posted successfully!');
+        alert('Announcement posted!');
       });
     });
 
-    // MODAL CONTROL
     function openLoginModal() { document.getElementById('loginModal').classList.add('show'); }
-    function closeLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
+    function closeLoginModal() { document.getElementById('loginForm').reset(); document.getElementById('loginModal').classList.remove('show'); }
     function openNewsModal() { document.getElementById('newsModal').classList.add('show'); }
-    function closeNewsModal() { document.getElementById('newsModal').classList.remove('show'); }
+    function closeNewsModal() { document.getElementById('newsForm').reset(); document.getElementById('newsModal').classList.remove('show'); }
   </script>
 </body>
 </html>
